@@ -1,13 +1,13 @@
-package com.aguardientes.azarcafetero.user_service.domain.model;
+package com.aguardientes.azarcafetero.user_service.application.dto;
 
-public class ProfileStatus {
+public class ProfileStatusResponse {
+    private String username;
+    private String avatarUrl;
+    private boolean canChangeName;
+    private long daysUntilNextChange;
 
-    private final String username;
-    private final String avatarUrl;
-    private final boolean canChangeName;
-    private final long daysUntilNextChange;
-
-    public ProfileStatus(String username, String avatarUrl, boolean canChangeName, long daysUntilNextChange) {
+    public ProfileStatusResponse(String username, String avatarUrl,
+                                 boolean canChangeName, long daysUntilNextChange) {
         this.username = username;
         this.avatarUrl = avatarUrl;
         this.canChangeName = canChangeName;
