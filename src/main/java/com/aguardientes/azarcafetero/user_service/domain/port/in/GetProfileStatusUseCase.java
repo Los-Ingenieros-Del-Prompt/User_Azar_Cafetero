@@ -1,7 +1,7 @@
 package com.aguardientes.azarcafetero.user_service.domain.port.in;
 
-import com.aguardientes.azarcafetero.user_service.application.dto.ProfileStatusResponse;
+import com.aguardientes.azarcafetero.user_service.domain.model.ProfileStatus;
 
 public interface GetProfileStatusUseCase {
-    ProfileStatusResponse execute(String userId);
+    ProfileStatus execute(String userId);
 }
