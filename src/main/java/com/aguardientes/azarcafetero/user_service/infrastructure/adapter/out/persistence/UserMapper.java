@@ -20,7 +20,9 @@ public class UserMapper {
                 user.getUserId(),
                 user.getUsername().getValue(),
                 user.getAvatarUrl().getValue(),
-                user.getLastNameChangedAt().getValue()
+                user.getLastNameChangedAt() != null
+                        ? user.getLastNameChangedAt().getValue()
+                        : null
         );
     }
 }

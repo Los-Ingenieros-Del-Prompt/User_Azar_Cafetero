@@ -1,4 +1,4 @@
-package com.aguardientes.azarcafetero.user_service.infrastructure.adapter.out.sugestion;
+package com.aguardientes.azarcafetero.user_service.infrastructure.adapter.out.suggestion;
 
 import com.aguardientes.azarcafetero.user_service.domain.port.out.UsernameAvailabilityPort;
 import com.aguardientes.azarcafetero.user_service.infrastructure.adapter.out.persistence.UserJpaRepository;
