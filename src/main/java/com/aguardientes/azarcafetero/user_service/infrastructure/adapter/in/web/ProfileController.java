@@ -7,11 +7,15 @@ import com.aguardientes.azarcafetero.user_service.domain.port.in.UpdateAvatarUse
 import com.aguardientes.azarcafetero.user_service.domain.port.in.UpdateUsernameUseCase;
 import com.aguardientes.azarcafetero.user_service.infrastructure.adapter.in.web.dto.UpdateAvatarRequest;
 import com.aguardientes.azarcafetero.user_service.infrastructure.adapter.in.web.dto.UpdateUsernameRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "Profile", description = "Gestión de perfil del usuario")  // ← aquí
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
@@ -29,8 +33,10 @@ public class ProfileController {
     }
 
     // PUT /profile/avatar
+    @Operation(summary = "Actualizar avatar")  // ← aquí
     @PutMapping("/avatar")
     public ResponseEntity<?> updateAvatar(
+            @Parameter(description = "ID del usuario", required = true)  // ← aquí
             @RequestHeader("X-User-Id") String userId,
             @RequestBody UpdateAvatarRequest request) {
 
@@ -39,8 +45,10 @@ public class ProfileController {
     }
 
     // PUT /profile/username
+    @Operation(summary = "Actualizar username", description = "Cooldown de 30 días")  // ← aquí
     @PutMapping("/username")
     public ResponseEntity<?> updateUsername(
+            @Parameter(description = "ID del usuario", required = true)  // ← aquí
             @RequestHeader("X-User-Id") String userId,
             @RequestBody UpdateUsernameRequest request) {
 
@@ -50,7 +58,6 @@ public class ProfileController {
             return ResponseEntity.ok(Map.of("message", result.getMessage()));
         }
 
-        // Nombre en uso → 409 Conflict
         if (result.getSuggestions() != null) {
             return ResponseEntity.status(409).body(Map.of(
                     "message", result.getMessage(),
@@ -58,7 +65,6 @@ public class ProfileController {
             ));
         }
 
-        // Cooldown activo → 403 Forbidden
         return ResponseEntity.status(403).body(Map.of(
                 "message", result.getMessage(),
                 "daysUntilNextChange", result.getDaysUntilNextChange()
@@ -66,8 +72,10 @@ public class ProfileController {
     }
 
     // GET /profile/status
+    @Operation(summary = "Obtener estado del perfil")  // ← aquí
     @GetMapping("/status")
     public ResponseEntity<ProfileStatusResponse> getStatus(
+            @Parameter(description = "ID del usuario", required = true)  // ← aquí
             @RequestHeader("X-User-Id") String userId) {
 
         ProfileStatusResponse status = getProfileStatusUseCase.execute(userId);
