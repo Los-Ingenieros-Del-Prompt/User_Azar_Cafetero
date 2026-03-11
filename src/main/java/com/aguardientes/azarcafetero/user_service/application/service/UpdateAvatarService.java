@@ -1,7 +1,9 @@
 package com.aguardientes.azarcafetero.user_service.application.service;
 
 import com.aguardientes.azarcafetero.user_service.domain.model.AvatarUrl;
+import com.aguardientes.azarcafetero.user_service.domain.model.LastNameChangeDate;
 import com.aguardientes.azarcafetero.user_service.domain.model.User;
+import com.aguardientes.azarcafetero.user_service.domain.model.Username;
 import com.aguardientes.azarcafetero.user_service.domain.port.in.UpdateAvatarUseCase;
 import com.aguardientes.azarcafetero.user_service.domain.port.out.ProfileRepository;
 
@@ -15,14 +17,19 @@ public class UpdateAvatarService implements UpdateAvatarUseCase {
 
     @Override
     public void execute(String userId, String newAvatarUrl) {
-        // 1. Buscar usuario
         User user = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + userId));
+                .orElseGet(() -> {
+                    User newUser = new User(
+                            userId,
+                            new Username("Player_" + userId.substring(0, 6)),
+                            new AvatarUrl("https://api.dicebear.com/7.x/avataaars/svg?seed=" + userId),
+                            new LastNameChangeDate(null)
+                    );
+                    profileRepository.save(newUser);
+                    return newUser;
+                });
 
-        // 2. Delegar cambio al dominio
         user.changeAvatar(new AvatarUrl(newAvatarUrl));
-
-        // 3. Persistir
         profileRepository.save(user);
     }
 }
