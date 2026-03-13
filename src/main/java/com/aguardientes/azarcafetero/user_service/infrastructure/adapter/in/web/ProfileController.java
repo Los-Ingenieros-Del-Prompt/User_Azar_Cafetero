@@ -89,12 +89,17 @@ public class ProfileController {
     // GET /profile/status
     @Operation(summary = "Obtener estado del perfil")
     @GetMapping("/status")
-    public ResponseEntity<?> getStatus(Authentication auth) {
+    public ResponseEntity<ProfileStatusResponse> getStatus(Authentication auth) {
 
-        if (auth == null) {
-            return ResponseEntity.ok(Map.of(
-                    "authenticated", false
-            ));
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.ok(
+                    new ProfileStatusResponse(
+                            null,
+                            null,
+                            false,
+                            0
+                    )
+            );
         }
 
         String userId = auth.getName();
