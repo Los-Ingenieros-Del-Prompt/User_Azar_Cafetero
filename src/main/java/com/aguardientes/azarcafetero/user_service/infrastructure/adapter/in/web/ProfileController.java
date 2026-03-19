@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Tag(name = "Profile", description = "Gestión de perfil del usuario")
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
