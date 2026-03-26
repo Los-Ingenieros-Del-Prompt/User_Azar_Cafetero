@@ -1,7 +1,10 @@
 package com.aguardientes.azarcafetero.user_service.application.service;
 
 import com.aguardientes.azarcafetero.user_service.application.dto.ProfileStatusResponse;
+import com.aguardientes.azarcafetero.user_service.domain.model.AvatarUrl;
+import com.aguardientes.azarcafetero.user_service.domain.model.LastNameChangeDate;
 import com.aguardientes.azarcafetero.user_service.domain.model.User;
+import com.aguardientes.azarcafetero.user_service.domain.model.Username;
 import com.aguardientes.azarcafetero.user_service.domain.port.in.GetProfileStatusUseCase;
 import com.aguardientes.azarcafetero.user_service.domain.port.out.ProfileRepository;
 
@@ -15,20 +18,24 @@ public class GetProfileStatusService implements GetProfileStatusUseCase {
 
     @Override
     public ProfileStatusResponse execute(String userId) {
-        // 1. Buscar usuario
         User user = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + userId));
+                .orElseGet(() -> {
+                    // Crear usuario por defecto si no existe
+                    User newUser = new User(
+                            userId,
+                            new Username("Player_" + userId.substring(0, 6)),
+                            new AvatarUrl("https://api.dicebear.com/7.x/avataaars/svg?seed=" + userId),
+                            new LastNameChangeDate(null)
+                    );
+                    profileRepository.save(newUser);
+                    return newUser;
+                });
 
-        // 2. Consultar estado del cooldown desde el dominio
-        boolean canChange = user.getLastNameChangedAt().canChangeName();
-        long daysLeft = user.getLastNameChangedAt().daysUntilNextChange();
-
-        // 3. Retornar DTO con el estado
         return new ProfileStatusResponse(
                 user.getUsername().getValue(),
                 user.getAvatarUrl().getValue(),
-                canChange,
-                daysLeft
+                user.getLastNameChangedAt().canChangeName(),
+                user.getLastNameChangedAt().daysUntilNextChange()
         );
     }
 }

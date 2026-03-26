@@ -1,9 +1,0 @@
--- V2__add_profile_columns.sql
-ALTER TABLE users
-    ADD COLUMN IF NOT EXISTS google_id VARCHAR(100),
-    ADD COLUMN IF NOT EXISTS email VARCHAR(255),
-    ADD COLUMN IF NOT EXISTS name VARCHAR(100),
-    ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW(),
-    ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP;
-
-CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username);
