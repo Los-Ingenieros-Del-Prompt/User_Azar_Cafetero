@@ -9,10 +9,10 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Usuario no encontrado → 404
+    // Entrada inválida / error de validación → 400
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity.status(404).body(Map.of(
+        return ResponseEntity.status(400).body(Map.of(
                 "error", ex.getMessage()
         ));
     }
