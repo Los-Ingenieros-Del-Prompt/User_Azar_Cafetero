@@ -20,9 +20,11 @@ public class UpdateUsernameService implements UpdateUsernameUseCase {
     public UsernameUpdateResult execute(String userId, String newUsername) {
         User user = profileRepository.findByUserId(userId)
                 .orElseGet(() -> {
+                    String safeUserId = userId == null ? "" : userId;
+                    String usernameSuffix = safeUserId.substring(0, Math.min(6, safeUserId.length()));
                     User newUser = new User(
                             userId,
-                            new Username("Player_" + userId.substring(0, 6)),
+                            new Username("Player_" + usernameSuffix),
                             new AvatarUrl("https://api.dicebear.com/7.x/avataaars/svg?seed=" + userId),
                             new LastNameChangeDate(null)
                     );
